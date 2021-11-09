@@ -66,11 +66,19 @@ export async function pullRequestDetails(token: string) {
       number: context.issue.number
     },
   );
-
-  return {
-    base_ref: baseRef.name,
-    base_sha: baseRef.target.oid,
-    head_ref: headRef.name,
-    head_sha: headRef.target.oid,
-  };
+  if (headRef) {
+      return {
+        base_ref: baseRef.name,
+        base_sha: baseRef.target.oid,
+        head_ref: headRef.name,
+        head_sha: headRef.target.oid,
+      };
+  } else {
+      return {
+        base_ref: baseRef.name,
+        base_sha: baseRef.target.oid,
+        head_ref: null,
+        head_sha: null,
+      };  
+  }
 }

@@ -6,27 +6,36 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: 3
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node: [12, 14, 16]
+        node:
+          - 16
+          - 18
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v3.1.0
 
       - name: Install node
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v3.5.1
         with:
           node-version: ${{ matrix.node }}
 
-      - run: yarn install
+      - run: npm ci
 
-      - run: yarn test
+      - run: npm run build
 
-      - run: yarn build
+      - run: npm test
 
-      - run: yarn package
+      - run: npm run package
